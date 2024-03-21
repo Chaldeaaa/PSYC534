@@ -1,3 +1,3 @@
 # PSYC534
 
-Groupwork respository for PSYC 540
+Groupwork respository for PSYC 534
