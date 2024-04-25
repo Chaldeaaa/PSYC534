@@ -13,18 +13,19 @@ require(stat)
 ###### Create matrix for testing ######
 matxCorr <- function(data, region, adjust = 'bonferroni'){
     # a function to produce a correlation matrix among selected marker of data
+    # might not work outside of dataset Crime from pkg plm
     # region (region tag of county): west, central, other
-    # adjust  (p-value adjustment)(default "bonferroni"): "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none" 
+    # adjust (p-value adjustment): "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"
     
     data <- data %>% 
         filter(region == region) %>% 
         select(starts_with('l'))
     
     d <- expand.grid(var1 = names(data),
-                var2 = names(data)) %>%
+                    var2 = names(data)) %>%
     as_tibble() %>%
-    mutate(test = map2(var1, var2, ~cor.test(unlist(data[.x,]),
-                                        unlist(data[.y,]))),
+    mutate(test = map2(var1, var2, ~cor.test(unlist(data[,.x]),    # perform the correlation test for each pair and store it
+                                           unlist(data[,.y]))),
           corr = map_dbl(test, 'estimate'),
           p_unadj = map_dbl(test,'p.value'))
     d$p <- p.adjust(d$p_unadj, adjust)
