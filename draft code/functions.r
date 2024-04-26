@@ -7,7 +7,7 @@
 require(dplyr)
 require(tidyverse)
 require(ggplot2)
-require(stat)
+require(stats)
 
 
 ###### Create matrix for testing ######
@@ -45,12 +45,24 @@ showCorr <- function(data, type = 'p'){
 
 ##### Visualize matrix using ggplot heatmap #####
 paintCorr <- function(data, type = 'p'){
-    # paint heat map based on coorelation or p values
+    # paint heat map based on correlation or p values
     # type includes 'corr' or 'p' (default 'p')
-    
+  library(RColorBrewer)
+  if (type != "corr") # if type = p/p_unadj
+    {
+    colMain <- colorRampPalette(brewer.pal(8, "Blues"))(25)
+    colMain_continuous <- rev(colorRampPalette(colMain)(100))
+    limit = c(0,1)
+    }
+  else{
+    colMain_continuous <- colorRampPalette(c("navy", "white", "darkred"))(100)
+    limit = c(-1, 1)
+  }
     ggplot(data, aes(var1, var2)) + 
         geom_tile(aes(fill = !!as.name(type))) +
         scale_x_discrete(expand = c(0,0)) +
         scale_y_discrete(expand = c(0,0)) +
-        scale_fill_gradient(low = "white", high = "red")
+      scale_fill_gradientn(colours = colMain_continuous, limits = limit) +
+        #scale_fill_gradient(low = lower, high = higher)+
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 }
