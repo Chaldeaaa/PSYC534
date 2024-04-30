@@ -11,10 +11,11 @@ require(stats)
 
 
 ###### Create matrix for testing ######
-matxCorr <- function(data, region, adjust = 'bonferroni'){
+matxCorr <- function(data, region, method = 'pearson', adjust = 'bonferroni'){
     # a function to produce a correlation matrix among selected marker of data
     # might not work outside of dataset Crime from pkg plm
     # region (region tag of county): west, central, other
+    # method (corr test methods): 'pearson', 'kendall', 'spearman'
     # adjust (p-value adjustment): "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", "fdr", "none"
     
     data <- data %>% 
